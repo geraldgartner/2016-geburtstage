@@ -2,6 +2,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(magrittr)
+library(ggthemes)
+source("style.R")
 
 geburtstage <- read.csv("geburtstage.csv")
 geburtstage <- geburtstage %>% gather(monat, wert, jaenner:dezember)
@@ -25,19 +27,68 @@ geburtstage$gebkat[geburtstage$wert< 4887] <- "l"
 # Convert the column to a factor
 geburtstage$gebkat <- factor(geburtstage$gebkat)
 
-color <- c("a" = "#ffffcc","b" = "#a1dab4","c" = "#41b6c4", "d" = "#2c7fb8", "e" ="#253494", "f"="#000000")
-['#fcfbfd','#efedf5','#dadaeb','#bcbddc','#9e9ac8','#807dba','#6a51a3','#54278f','#3f007d']
+color <- c("a" = "#49006a",
+           "b" = "#7a0177",
+           "c" = "#ae017e", 
+           "d" = "#dd3497", 
+           "e" = "#f768a1", 
+           "f"= "#fa9fb5",
+           "g"= "#fcc5c0",
+           "h"= "#fde0dd",
+           "i"= "#fff7f3",
+           "j"= "#fff7f3",
+           "k"= "#fff7f3",
+           "NA"= "#000000"
+           
+           )
+['#','#','#','#','#',
+  '#','#','#','#']
+
+
 
 g <- ggplot(data = geburtstage, aes(x = date, y = monat)) +
-  geom_tile(aes(fill = gebkat))+
-  scale_y_discrete(limits= rev(c("jaenner","februar","maerz","april","mai","juni","juli","august", "september","oktober","november","dezember"))) +
+  geom_tile(aes(fill = gebkat), na.rm = FALSE)+
+  scale_y_discrete(limits= rev(c("jaenner","februar","maerz","april","mai","juni","juli","august", "september","oktober","november","dezember")),
+                   labels=rev(c("Jänner",
+                            "Februar", 
+                            "März", 
+                            "April", 
+                            "Mai", 
+                            "Juni",
+                            "Juli",
+                            "August",
+                            "September",
+                            "Oktober",
+                            "November",
+                            "Dezember")))+
+  scale_fill_manual(values = color)+
+  theme_dstd()
   print(g)
 
 #v2
-g <- ggplot(data = geburtstage, aes(x = date, y = monat)) +
-  geom_tile(aes(fill = wert))+
-  scale_y_discrete(limits= rev(c("jaenner","februar","maerz","april","mai","juni","juli","august", "september","oktober","november","dezember")))+
-  scale_fill_gradient(breaks=quantile_range, values=quantile_range. colour=color_palette, space="Lab")
-print(g)
+  g2 <- ggplot(data = geburtstage, aes(x = date, y = monat)) +
+    geom_tile(aes(fill = wert), color ="#969696", na.rm = FALSE)+
+    scale_y_discrete(limits= rev(c("jaenner","februar","maerz","april","mai","juni","juli","august", "september","oktober","november","dezember")),
+                     labels=rev(c("Jänner",
+                                  "Februar", 
+                                  "März", 
+                                  "April", 
+                                  "Mai", 
+                                  "Juni",
+                                  "Juli",
+                                  "August",
+                                  "September",
+                                  "Oktober",
+                                  "November",
+                                  "Dezember")))+
+    scale_fill_gradient(limits=c(16965, 21040), low="#fff7f3", high="#49006a", space="Lab")+
+    theme_dstd()
+    
+    
+  print(g2)
+ggsave("heatmap.pdf", width=10, height=5, units = "in")  
+  
+# 
+# + scale_colour_gradient(limits=c(16965, 21040), low="white", high="red", space="Lab")
 
 
